@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-first-argocd 
+  namespace: argocd        # where argocd is installed ... 
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Shakilkhan24/argocd-testing.git
+    targetRevision: HEAD   # for most recent commit (HEAD)
+    path: dev              # dev envirn , exact path as in the gitRepo 
+  destination:
+    server: https://kubernetes.default.svc     # it is referring the default cluster, here minikube , 
+                                               # but for other like aws eks, refer the endpoint of the cluster ...  
+                                               
+    namespace: starter-destination 
+    
+                # in destination, where manifests would be applied ... 
+  syncPolicy:
+    automated:               # enable auto-sync
+      prune: true            # delete resources not tracked in Git
+      selfHeal: true         # revert out-of-band changes in cluster
+    syncOptions:
+      - CreateNamespace=true # auto-create namespace if it doesn’t exist
+      - Validate=true        # validate manifests before applying
+      
+
+
+      # add more and more for better customization and best practicies... 
